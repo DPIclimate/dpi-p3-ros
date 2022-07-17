@@ -14,6 +14,12 @@ ROS requires a several terminal windows to be open at a time. A terminal window 
 
 ## Installation
 
+There are a few things that need to be installed (instructions below):
+1. ROS - Using Noetic for this project
+2. Catkin - Workspace / build system for ROS
+3. ARIA - A ROS package for interfacing with the Pioneer 3 robot
+4. AMRISim - A virtual simulator for the Pioneer 3 robot
+
 ---
 
 ### ROS (Noetic)
