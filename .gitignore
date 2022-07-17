@@ -1,0 +1,7 @@
+# Folders
+build
+
+# Files
+*.swp
+*.*.swp
+.DS_Store
