@@ -28,7 +28,7 @@ int main(int argc, char* argv[]){
 	vel.angular.x = 0.0;
 	vel.angular.y = 0.0;
 
-	double lin_x = 0.0;
+	double lin_x = 1.0;
 	double ang_z = 0.0;
 
 	while(ros::ok()){
@@ -45,9 +45,6 @@ int main(int argc, char* argv[]){
 
 		// Publish message
 		chatter_pub.publish(vel);
-
-		lin_x = 0.0;
-		ang_z = 0.0;
 
 		ros::spinOnce();
 

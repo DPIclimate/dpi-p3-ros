@@ -12,6 +12,8 @@ If using a Mac or Windows OS its recommended that you install a virtual machine 
 
 ROS requires a several terminal windows to be open at a time. A terminal window manager like tmux is recommend (`sudo apt install tmux`) as it makes it easier to switch between windows.
 
+---
+
 ## Installation
 
 There are a few things that need to be installed (instructions below):
@@ -19,8 +21,6 @@ There are a few things that need to be installed (instructions below):
 2. Catkin - Workspace / build system for ROS
 3. ARIA - A ROS package for interfacing with the Pioneer 3 robot
 4. AMRISim - A virtual simulator for the Pioneer 3 robot
-
----
 
 ### ROS (Noetic)
 
@@ -74,8 +74,6 @@ sudo rosdep init
 rosdep update
 ```
 
----
-
 ### Catkin (workspace for ROS)
 
 Instructions taken from: [ROS/Tutorials/InstallingandConfiguringROSEnvironment - ROS Wiki](http://wiki.ros.org/ROS/Tutorials/InstallingandConfiguringROSEnvironment)
@@ -91,13 +89,11 @@ catkin_make
 2. Source catkin workspace setup.bash script
 
 ```bash
-source ~/catkin/devel/setup.bash
+source ~/catkin_ws/devel/setup.bash
 # or (untested but hopefully this works)
 echo "source ~/catkin/devel/setup.bash" >> ~/.bashrc
 source ~/.bashrc
 ```
-
----
 
 ### ARIA (ROS internal package for Pioneer 3)
 
@@ -114,8 +110,6 @@ cd AriaCoda
 make
 sudo make install
 ```
-
----
 
 ### AMRISim (Pioneer 3 Simulator)
 
@@ -144,8 +138,6 @@ export ARIA=/home/<user>/Downloads/AriaCoda
 make
 sudo make install
 ```
-
----
 
 ## Running a simulator (or real) instance
 
@@ -179,6 +171,7 @@ rosrun rosaria RosAria
 rostopic pub -1 /RosAria/cmd_vel geometry_msgs/Twist '[1.0, 0.0, 0.0]' '[0.0, 0.0, 1.0]'
 ```
 
+**END OF INSTALLATION**
 ---
 
 ## Setting up a ROS project (package)
@@ -225,5 +218,43 @@ catkin_ws/
 ```bash
 rospack depends1 <package_name> # First order dependencies
 rospack depends <package_name> # All dependencies (dependencies of dependencies)
+```
+
+---
+
+## Setting up remote robot over TCP
+
+Instructions from: [http://wiki.ros.org/ROSARIA/Tutorials/How%20to%20use%20ROSARIA](http://wiki.ros.org/ROSARIA/Tutorials/How%20to%20use%20ROSARIA)
+Ideally the robot should just listen to commands from a central machine. This process involves:
+
+1. On the **robot machine**:
+```bash
+export ROS_MASTER_URI=http://<ip_address_of_robot>:11311
+export ROS_IP=<ip_address_of_robot>
+
+# Add ip address of host to /etc/hosts
+sudo vim /etc/hosts
+# Add "<ip_address_of_host>		my_workstation" to /etc/hosts
+
+# In a new terminal window
+cd ~/catkin_ws
+catkin_make
+roscore
+
+# In another terminal window
+cd ~/catkin_ws
+catkin_make
+rosrun rosaria RosAria _port:=/dev/ttyS0
+```
+
+2. On the **host machine** (do not run roscore here):
+```bash
+export ROS_MASTER_URI=http://<ip_address_of_robot>:11311
+export ROS_HOSTNAME=<ip_address_of_host>
+export ROS_IP=<ip_address_of_host>
+
+cd ~/catkin_ws/
+catkin_make
+rostopic echo /RosAria/pose # Get position from robot
 ```
 
